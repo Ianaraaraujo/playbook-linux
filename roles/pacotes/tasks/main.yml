@@ -1,0 +1,10 @@
+---
+- name: Update dos pacotes linux
+  become: yes
+  apt:
+    update_cache: true
+    force_apt_get: true
+
+- name: Instalação de pacotes e dependencias
+  become: yes
+  apt: "name={{ apps }} state=latest"

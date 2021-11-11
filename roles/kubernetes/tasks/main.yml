@@ -1,0 +1,25 @@
+---
+- name: Adicionar chave de assinatura apt para kubernetes
+  become: yes
+  apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present 
+
+- name: Adicionar repositório apt para kubernetes
+  become: yes
+  apt_repository:
+    repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+    state: present
+    filename: kubernetes.list
+
+- name: Instalar binários kubernetes
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  loop:
+    - kubectl
+    - kubeadm
+    - kubelet
+

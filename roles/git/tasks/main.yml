@@ -1,0 +1,20 @@
+---
+- name: Update all packages
+  become: yes
+  apt:
+    upgrade: dist
+
+- name: Install git
+  become: yes
+  apt: 
+    name: git
+    state: latest
+
+- name: Config git user
+  git_config:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    scope: global
+  with_items:
+    - {name: "user.name", value: '{{ user_name }}' }
+    - {name: "user.email", value: '{{ user_email }}' }

@@ -1,0 +1,37 @@
+---
+- name: GPG Key
+  become: yes
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Adicionar repositório docker
+  become: yes
+  apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu bionic stable
+    state: present
+
+- name: Instalação do docker
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+  loop:
+    - docker-ce 
+    - docker-ce-cli 
+    - containerd.io 
+
+- name: Verfiricar se o docker está ativo
+  service: 
+    name: docker
+    state: started
+    enabled: yes
+
+- name: Permissões ao grupo docker
+  become: yes
+  command: usermod -aG docker $USER
+
+- name: Permissões ao grupo docker
+  become: yes
+  command: chmod 666 /var/run/docker.sock

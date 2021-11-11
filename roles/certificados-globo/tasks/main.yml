@@ -1,0 +1,47 @@
+---
+- name: Criação do caminho para certificados 
+  stat: "path={{ path_user }}/certificates" 
+  register: certificates_path
+
+- name: Criação do caminho para certificados
+  command: 'mkdir {{ path_user }}/certificates'
+  when: certificates_path.stat.exists == false
+
+#--------------------------------------------------------
+
+- name: Instalação do certiciado AC Raiz
+  command: curl http://ac.globoi.com/repositorio/AC_RAIZ.pem -o {{ path_user }}/certificates/ac_raiz_globo.pem
+
+- name: Conversão do arquivo PEM para CER 
+  command: openssl x509 -inform PEM -in {{ path_user }}/certificates/ac_raiz_globo.pem -outform DER -out {{ path_user }}/certificates/ac_raiz_globo.cer
+
+- name: Definir permissões to AC Raiz
+  command: 'chmod 666 {{ path_user }}/certificates/ac_raiz_globo.cer'
+  become: yes
+  become_method: sudo
+
+#-------------------------------------------------------
+
+- name: Instalação do certificado SSL
+  command: curl http://ac.globoi.com/repositorio/AC_SSL.pem -o {{ path_user }}/certificates/ac_ssl.pem
+
+- name: Conversão do arquivo PEM para CER
+  command: openssl x509 -inform PEM -in {{ path_user }}/certificates/ac_ssl.pem -outform DER -out {{ path_user }}/certificates/ac_ssl.cer
+
+- name: Definir permissões para SSL 
+  command: 'chmod 666 {{ path_user }}/certificates/ac_ssl.cer'
+  become: yes
+  become_method: sudo
+
+#-------------------------------------------------------
+
+- name: Instalação do certificado API
+  command: curl http://ac.globoi.com/repositorio/AC_API.pem -o {{ path_user }}/certificates/ac_api.pem
+
+- name: Conversão do arquivo PEM para CER
+  command: openssl x509 -inform PEM -in {{ path_user }}/certificates/ac_api.pem -outform DER -out {{ path_user }}/certificates/ac_api.cer
+
+- name: Definir permissões para SSL 
+  command: 'chmod 666 {{ path_user }}/certificates/ac_api.cer'
+  become: yes
+  become_method: sudo

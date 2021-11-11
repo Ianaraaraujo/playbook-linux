@@ -1,0 +1,40 @@
+---
+- hosts: ubuntu
+  roles:
+    - pacotes
+    - git
+    - pyenv
+    - nvm
+    - docker
+    - kubernetes
+    - terraform
+    - tsuru
+    - certificados-globo
+
+  vars:
+    ansible_connection: local
+    ansible_user: # usuario
+    ansible_private_key_file: # path da chave ssh
+
+    apps:
+      - autoconf
+      - bash-completion
+      - cmake
+      - openssl
+      - wget
+      - curl
+      - vim
+      - golang
+      - rbenv
+      - unzip
+      - unrar 
+      - ca-certificates
+      - apt-transport-https
+      - software-properties-common
+      - gnupg-agent
+
+    path_user: # /home/usuario
+    user_name: # usuario git
+    user_email: # email git 
+
+

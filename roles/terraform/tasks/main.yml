@@ -1,0 +1,7 @@
+---
+- name: Instalação do Terraform v1.0.10
+  become: yes
+  unarchive:
+    src: https://releases.hashicorp.com/terraform/1.0.10/terraform_1.0.10_linux_amd64.zip
+    dest: /usr/local/bin/
+    remote_src: yes

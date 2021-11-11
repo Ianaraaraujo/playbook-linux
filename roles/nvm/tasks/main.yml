@@ -1,0 +1,35 @@
+---
+- name: Caminho do binário do nvm
+  stat: "path={{ path_user }}/nvm"
+  register: nvm_binary
+
+- name: Caminho de instalação do nvm
+  command: 'mkdir {{ path_user }}/nvm'
+  when: nvm_binary.stat.exists == false
+
+- name: Download do script de instalação NVM
+  get_url:
+    url: https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh
+    dest: "{{ path_user }}/nvm"
+
+- name: Definir permissões sobre o script
+  file:
+    path: "{{ path_user }}/nvm/install.sh"
+    mode: 0755
+
+- name: Inicializar o script NVM 
+  command: "bash {{ path_user }}/nvm/install.sh"
+  args:
+    chdir: "{{ item }}/nvm"
+  with_items: "{{ path_user }}"
+  changed_when: true
+
+- name: Exportar a variável NVM_DIR
+  lineinfile:
+    path: "{{ path_user }}/.bashrc"
+    line: "{{ item }}"
+  with_items:
+    - 'export NVM_DIR="$HOME/.nvm"'
+    - '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"'
+    - '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"'
+  
